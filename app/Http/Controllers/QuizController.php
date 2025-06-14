@@ -33,7 +33,13 @@ class QuizController extends Controller
 
         return redirect()->route('courses.show', $courseId)->with('success', "Nilai Anda: $score");
     }
-
+    public function show(Course $course)
+    {
+        $quiz = $course->quiz()->with('questions')->first();
+    
+        return view('quiz.show', compact('course', 'quiz'));
+    }
+    
     public function downloadCertificate($courseId)
     {
         $result = QuizResult::where('user_id', Auth::id())

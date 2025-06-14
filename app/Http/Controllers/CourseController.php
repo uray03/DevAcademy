@@ -51,11 +51,17 @@ class CourseController extends Controller
         $course->delete();
         return redirect()->route('courses.index')->with('success', 'Course deleted.');
     }
-    public function show(Course $course)
-    {
-        $course->load(['materials', 'questions.answers']); // eager load untuk quiz
-        return view('courses.show', compact('course'));
-    }
-    
 
+    public function show($id)
+{
+    $course = Course::with(['materials', 'quizzes.questions.answers'])->findOrFail($id);
+
+    $quiz = $course->quizzes->first();
+    $questions = $quiz ? $quiz->questions : collect();
+
+    return view('courses.show', compact('course', 'questions'));
+}
+
+   
+    
 }

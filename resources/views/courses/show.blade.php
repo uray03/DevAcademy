@@ -1,12 +1,25 @@
-@if(auth()->check())
-    @php
-        $result = \App\Models\QuizResult::where('user_id', auth()->id())->where('course_id', $course->id)->first();
-    @endphp
+@extends('layouts.app')
 
-    @if($result && $result->score >= 80)
-        <a href="{{ route('quiz.certificate', $course->id) }}"
-           class="mt-4 inline-block px-4 py-2 bg-green-600 text-white rounded">
-            Unduh Sertifikat
-        </a>
-    @endif
-@endif
+@section('content')
+<div class="container py-5">
+    <div class="mb-4">
+        <h2 class="fw-bold">{{ $course->title }}</h2>
+        <p class="text-muted">{{ $course->description }}</p>
+    </div>
+
+    <div class="mb-5">
+        <h4>Quiz</h4>
+        @if($questions->isNotEmpty())
+            <ul class="list-group">
+                @foreach($questions as $q)
+                    <li class="list-group-item">
+                        {{ $loop->iteration }}. {{ $q->question_text }}
+                    </li>
+                @endforeach
+            </ul>
+        @else
+            <p class="text-muted">Belum ada soal tersedia untuk kursus ini.</p>
+        @endif
+    </div>
+</div>
+@endsection

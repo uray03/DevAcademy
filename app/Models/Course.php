@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+
 
 class Course extends Model
 {
@@ -39,7 +41,18 @@ class Course extends Model
 
     public function quizzes()
     {
-        return $this->hasOne(Quiz::class);
+        return $this->hasMany(Quiz::class);
     }
-    
+
+    public function questions(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            \App\Models\Question::class,
+            \App\Models\Quiz::class,
+            'course_id', // Foreign key on quizzes table
+            'quiz_id',   // Foreign key on questions table
+            'id',        // Local key on courses table
+            'id'         // Local key on quizzes table
+    );
+}
 }
